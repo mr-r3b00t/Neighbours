@@ -76,10 +76,9 @@ write-host "RDP Hosts"
 #rdp hosts
 $rdphostlist = $tcpconnectlist | Where-Object TcpTestSucceeded -EQ $True | Where-Object RemotePort -EQ 3389 | Select-Object -Property ComputerName | Sort-Object -Property ComputerName -Unique
 
-$smbhostlist.count
 $smbhostlist
 
-$rdphostlist.count
+
 $rdphostlist
-$alivelist.count
-$alivelist
+
+write-host "There are : " $alivelist.count " Hosts Alive based on ARP cache entries." -ForegroundColor Green
