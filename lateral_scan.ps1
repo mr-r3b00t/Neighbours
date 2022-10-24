@@ -62,6 +62,5 @@ $tcpclient.Client.Close()
 }
 
 
-$tcpconnectlist | Where-Object TcpTestSucceeded -EQ $True | Select-Object -Property computername | Sort-Object -Unique
-
+$tcpconnectlist | Where-Object TcpTestSucceeded -EQ $True | Select-Object -Property ComputerName | Sort-Object -Property ComputerName -Unique
 #$tcpconnectlist.Computername | Sort-Object -Uniquea
