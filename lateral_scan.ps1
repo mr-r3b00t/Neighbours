@@ -16,28 +16,52 @@ $nets[0]
 
 $ipranges = ("192","172","10")
 
+if($nets[0] -in $ipranges){"ok"}
+
 if($nets[0] -in $ipranges){
-write-host "Local Network Address Found" -ForegroundColor Green
-If($nets -notcontains "255"){
-write-host "Local Unicast Address Found" -ForegroundColor Green
+    write-host "Local Network Address Found" -ForegroundColor Green
+    If($nets -notcontains "255"){
+    write-host "Local Unicast Address Found" -ForegroundColor Green
 
-$node.IPAddress
+    $node.IPAddress
 
-$targetlist += $node.IPAddress
+    $targetlist += $node.IPAddress
+
+    #$targetlist = $targetlist | Sort-Object -Unique
+
+
+
+    }
+}
+
+}
+
+$targetlist
 
 foreach($destination in $targetlist){
 
 foreach($port in $ports){
 
+write-host "Testing Port: " $port " against: " $destination -ForegroundColor Cyan
+$tcpclient = New-Object System.Net.Sockets.TcpClient
+$connected = $tcpclient.BeginConnect($destination,$port,$null,$null)
+sleep -Milliseconds 20
+
+if($tcpclient.Connected){
+
+write-host "port $port open" -ForegroundColor Red
 $results_list += Test-NetConnection -ComputerName $destination -Port $port
 $tcpconnectlist += $results_list | Where-Object TcpTestSucceeded -EQ $True
+
 }
+
+$tcpclient.Client.Close()
 
 }
 
 }
-}
 
-}
 
-$tcpconnectlist
+$tcpconnectlist | Where-Object TcpTestSucceeded -EQ $True | Select-Object -Property computername | Sort-Object -Unique
+
+#$tcpconnectlist.Computername | Sort-Object -Uniquea
