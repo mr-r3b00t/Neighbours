@@ -61,6 +61,23 @@ $tcpclient.Client.Close()
 
 }
 
+#alive hosts
+write-host "Alive Hosts"
+$alivelist = $tcpconnectlist | Where-Object TcpTestSucceeded -EQ $True | Select-Object -Property ComputerName | Sort-Object -Property ComputerName -Unique
 
-$tcpconnectlist | Where-Object TcpTestSucceeded -EQ $True | Select-Object -Property ComputerName | Sort-Object -Property ComputerName -Unique
-#$tcpconnectlist.Computername | Sort-Object -Uniquea
+
+write-host "SMB Hosts"
+
+#smb hosts
+$smbhostlist = $tcpconnectlist | Where-Object TcpTestSucceeded -EQ $True | Where-Object RemotePort -EQ 445 | Select-Object -Property ComputerName | Sort-Object -Property ComputerName -Unique
+
+
+write-host "RDP Hosts"
+#rdp hosts
+$rdphostlist = $tcpconnectlist | Where-Object TcpTestSucceeded -EQ $True | Where-Object RemotePort -EQ 3389 | Select-Object -Property ComputerName | Sort-Object -Property ComputerName -Unique
+
+$smbhostlist
+
+$rdphostlist
+
+$alivelist
